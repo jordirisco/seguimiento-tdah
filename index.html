@@ -397,6 +397,35 @@ label.field-label {
 .fab-note { background: var(--sage-soft); bottom: 66px; }
 .fab-notes-list { background: var(--plum-soft); bottom: 0; }
 
+/* Info discreto (privacidad) */
+.info-corner {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  bottom: 90px;
+  pointer-events: none;
+  z-index: 8;
+}
+.info-btn {
+  position: absolute;
+  left: 20px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: var(--paper-alt);
+  color: var(--ink-soft);
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0.8;
+  box-shadow: var(--shadow);
+  pointer-events: auto;
+  display: flex; align-items: center; justify-content: center;
+}
+.info-btn:hover { opacity: 1; }
+
 /* Sheet / modal */
 .sheet-backdrop {
   position: fixed; inset: 0; background: rgba(30, 20, 12, 0.4);
@@ -422,6 +451,9 @@ label.field-label {
 
 .sheet-actions { display: flex; gap: 10px; margin-top: 18px; }
 .sheet-actions .btn { flex: 1; }
+
+.sheet p.note { color: var(--ink-soft); font-size: 13.5px; line-height: 1.5; margin: 0 0 12px; }
+.sheet p.note:last-of-type { margin-bottom: 0; }
 
 /* Historial */
 .history-row {
@@ -533,6 +565,7 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
       <button class="nav-btn" data-tab="historial"><span class="nav-icon">📊</span><span>Historial</span></button>
     </nav>
     <div id="fabRoot"></div>
+    <div class="info-corner"><button class="info-btn" id="infoBtn" title="Privacidad y datos">ℹ️</button></div>
     <div id="modalRoot"></div>
     <div id="toastRoot"></div>
   </div>
@@ -1132,9 +1165,28 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
     }));
   }
 
+  /* ---------- Modal: privacidad y datos ---------- */
+  function renderPrivacySheet() {
+    $("#modalRoot").innerHTML = `
+      <div class="sheet-backdrop" id="sheetBackdrop">
+        <div class="sheet" id="sheetBody">
+          <h2>🔒 Privacidad y datos</h2>
+          <p class="note">Todo lo que anotes aquí (plan, sueño, notas, valores...) se guarda solo en este navegador, en este dispositivo. Nadie más puede verlo, ni siquiera tu terapeuta.</p>
+          <p class="note">No hay copia de seguridad en ningún sitio: si borras los datos del navegador, cambias de móvil o usas modo privado, se perderá todo lo anotado sin poder recuperarlo.</p>
+          <p class="note">Si el dispositivo es compartido, cualquier persona con acceso a este navegador podría ver lo escrito.</p>
+          <div class="sheet-actions">
+            <button class="btn btn-primary btn-block" id="modalCancel">Entendido</button>
+          </div>
+        </div>
+      </div>`;
+    $("#sheetBackdrop").addEventListener("click", (e) => { if (e.target.id === "sheetBackdrop") closeModal(); });
+    $("#modalCancel").addEventListener("click", closeModal);
+  }
+
   function renderModal() {
     if (!state.modalType) { $("#modalRoot").innerHTML = ""; return; }
     if (state.modalType === "notesList") { renderNotesListSheet(); return; }
+    if (state.modalType === "privacy") { renderPrivacySheet(); return; }
     renderAddNoteSheet();
   }
 
@@ -1180,10 +1232,17 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
   }
 
   $$(".nav-btn").forEach((btn) => btn.addEventListener("click", () => { state.tab = btn.dataset.tab; render(); }));
+  $("#infoBtn").addEventListener("click", () => openModal("privacy"));
 
   window.addEventListener("beforeunload", saveData);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") saveData(); });
 
   render();
+
+  const PRIVACY_SEEN_KEY = "tdah-privacy-seen";
+  if (!localStorage.getItem(PRIVACY_SEEN_KEY)) {
+    openModal("privacy");
+    try { localStorage.setItem(PRIVACY_SEEN_KEY, "1"); } catch (e) {}
+  }
 })();
 </script>
