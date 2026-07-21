@@ -833,17 +833,9 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
   }
 
   function attachCierre() {
-    $$('[data-face-group] .face-btn').forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const group = btn.closest("[data-face-group]");
-        const groupName = group.dataset.faceGroup;
-        const value = Number(btn.dataset.faceValue);
-        if (groupName === "quality") state.cierreQuality = value; else state.cierreMood = value;
-        $$(".face-btn", group).forEach((b) => b.classList.toggle("selected", Number(b.dataset.faceValue) === value));
-      });
-    });
-    $("#cierreSaveBtn").addEventListener("click", () => {
+    const syncCierreState = () => {
       const today = todayStr();
+      if (!state.data.days[today]) state.data.days[today] = emptyDay();
       state.data.days[today].sleep = { bedTime: $("#bedTime").value, wakeTime: $("#wakeTime").value, quality: state.cierreQuality };
       state.data.days[today].balance = {
         mood: state.cierreMood,
@@ -852,6 +844,27 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
         tomorrowFocus: $("#tomorrowFocus").value,
       };
       saveData();
+    };
+
+    $$('[data-face-group] .face-btn').forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const group = btn.closest("[data-face-group]");
+        const groupName = group.dataset.faceGroup;
+        const value = Number(btn.dataset.faceValue);
+        if (groupName === "quality") state.cierreQuality = value; else state.cierreMood = value;
+        $$(".face-btn", group).forEach((b) => b.classList.toggle("selected", Number(b.dataset.faceValue) === value));
+        syncCierreState();
+      });
+    });
+
+    ["#bedTime", "#wakeTime", "#pos1", "#pos2", "#pos3", "#resisted", "#tomorrowFocus"].forEach((selector) => {
+      const el = $(selector);
+      if (!el) return;
+      el.addEventListener("input", syncCierreState);
+    });
+
+    $("#cierreSaveBtn").addEventListener("click", () => {
+      syncCierreState();
       showToast("Guardado ✓");
     });
   }
@@ -1275,6 +1288,9 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
 
   $$(".nav-btn").forEach((btn) => btn.addEventListener("click", () => { state.tab = btn.dataset.tab; render(); }));
   $("#headerBackupBtn").addEventListener("click", () => openModal("backup"));
+
+  window.addEventListener("beforeunload", saveData);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") saveData(); });
 
   render();
 })();
