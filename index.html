@@ -108,23 +108,6 @@ html, body {
   z-index: 5;
 }
 
-.header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-
-.header-icon-btn {
-  background: var(--paper-alt);
-  border: none;
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
-  font-size: 16px;
-  cursor: pointer;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow);
-}
-
 .app-header h1 {
   margin: 0;
   font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
@@ -519,13 +502,6 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
   display: flex; align-items: center; justify-content: center;
 }
 
-.backup-note {
-  color: var(--ink-soft);
-  font-size: 13.5px;
-  line-height: 1.5;
-  margin: 0 0 14px;
-}
-
 .saved-toast {
   position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
   background: var(--sage); color: var(--paper);
@@ -544,13 +520,8 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
 <div class="tdah-root">
   <div class="app-shell">
     <div class="app-header">
-      <div class="header-row">
-        <div>
-          <h1 id="headerTitle">Hoy</h1>
-          <div class="subdate" id="headerSubtitle"></div>
-        </div>
-        <button class="header-icon-btn" id="headerBackupBtn" title="Copia de seguridad">💾</button>
-      </div>
+      <h1 id="headerTitle">Hoy</h1>
+      <div class="subdate" id="headerSubtitle"></div>
     </div>
     <main class="app-main" id="screen"></main>
     <nav class="bottom-nav" id="bottomNav">
@@ -1071,16 +1042,6 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
     });
     html += `</div>`;
 
-    html += `<div class="card">
-      <h2><span class="dot" style="background:var(--plum)"></span>Copia de seguridad</h2>
-      <p class="backup-note">Las notas se guardan en este dispositivo y este navegador. Si el navegador borra los datos o cambias de dispositivo, expórtalas para no perderlas.</p>
-      <div class="two-col">
-        <button class="btn btn-secondary" id="exportBtn">⬇️ Exportar</button>
-        <button class="btn btn-secondary" id="importBtn">⬆️ Importar</button>
-      </div>
-      <input type="file" id="importFile" accept="application/json" style="display:none;">
-    </div>`;
-
     return html;
   }
 
@@ -1108,74 +1069,6 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
       $$(".history-detail.open").forEach((d) => d.classList.remove("open"));
       if (!isOpen) detail.classList.add("open");
     }));
-
-    $("#exportBtn").addEventListener("click", doExport);
-    $("#importBtn").addEventListener("click", () => $("#importFile").click());
-    $("#importFile").addEventListener("change", (e) => {
-      doImportFile(e.target.files[0], refreshScreen);
-      e.target.value = "";
-    });
-  }
-
-  /* ---------- Copia de seguridad (compartida) ---------- */
-  async function doExport() {
-    if (!window.claude || !window.claude.downloads) {
-      showToast("Exportar no está disponible aquí");
-      return;
-    }
-    try {
-      await window.claude.downloads.save({
-        filename: `seguimiento-tdah-${todayStr()}.json`,
-        data: JSON.stringify(state.data, null, 2),
-      });
-      showToast("Exportado ✓");
-    } catch (err) {
-      if (err && err.code !== "declined") showToast("No se pudo exportar");
-    }
-  }
-
-  function doImportFile(file, onDone) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const parsed = JSON.parse(reader.result);
-        state.data = normalizeStore(parsed && parsed.days ? parsed : { days: parsed, notes: [], values: [] });
-        ensureDays();
-        saveData();
-        showToast("Datos importados ✓");
-        if (onDone) onDone();
-      } catch (err) {
-        showToast("El archivo no es válido");
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function renderBackupSheet() {
-    $("#modalRoot").innerHTML = `
-      <div class="sheet-backdrop" id="sheetBackdrop">
-        <div class="sheet" id="sheetBody">
-          <h2>💾 Copia de seguridad</h2>
-          <p class="backup-note">Todo lo anotado (plan, sueño, notas, valores...) se guarda solo en este navegador. Si al volver a abrir la app ves que se ha borrado, importa aquí tu última copia exportada. Exporta con frecuencia para no perder nada.</p>
-          <div class="two-col">
-            <button class="btn btn-secondary" id="modalExportBtn">⬇️ Exportar</button>
-            <button class="btn btn-secondary" id="modalImportBtn">⬆️ Importar</button>
-          </div>
-          <input type="file" id="modalImportFile" accept="application/json" style="display:none;">
-          <div class="sheet-actions">
-            <button class="btn btn-secondary btn-block" id="modalCancel">Cerrar</button>
-          </div>
-        </div>
-      </div>`;
-    $("#sheetBackdrop").addEventListener("click", (e) => { if (e.target.id === "sheetBackdrop") closeModal(); });
-    $("#modalCancel").addEventListener("click", closeModal);
-    $("#modalExportBtn").addEventListener("click", doExport);
-    $("#modalImportBtn").addEventListener("click", () => $("#modalImportFile").click());
-    $("#modalImportFile").addEventListener("change", (e) => {
-      doImportFile(e.target.files[0], () => { closeModal(); refreshScreen(); });
-      e.target.value = "";
-    });
   }
 
   /* ---------- Modal: añadir nota ---------- */
@@ -1241,7 +1134,6 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
   function renderModal() {
     if (!state.modalType) { $("#modalRoot").innerHTML = ""; return; }
     if (state.modalType === "notesList") { renderNotesListSheet(); return; }
-    if (state.modalType === "backup") { renderBackupSheet(); return; }
     renderAddNoteSheet();
   }
 
@@ -1287,7 +1179,6 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
   }
 
   $$(".nav-btn").forEach((btn) => btn.addEventListener("click", () => { state.tab = btn.dataset.tab; render(); }));
-  $("#headerBackupBtn").addEventListener("click", () => openModal("backup"));
 
   window.addEventListener("beforeunload", saveData);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") saveData(); });
