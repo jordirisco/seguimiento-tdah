@@ -1,0 +1,1281 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seguimiento TDAH</title>
+<style>
+:root {
+  --sand: #FBEEDD;
+  --paper: #FFFBF5;
+  --paper-alt: #F3E1C8;
+  --ink: #38291F;
+  --ink-soft: #8C7860;
+  --marigold: #D98A34;
+  --marigold-soft: #F3D9AE;
+  --plum: #5B4066;
+  --plum-soft: #E7DCEC;
+  --rose: #BE5B6C;
+  --rose-soft: #F5DCE0;
+  --sage: #6E8F6B;
+  --sage-soft: #DCE8D9;
+  --line: #EBDCC5;
+  --root: #4B6B4E;
+  --root-soft: #DCE6DC;
+  --branch: #B97A4C;
+  --branch-soft: #F0DCC7;
+  --bloom: #B8901F;
+  --bloom-soft: #F2E4BA;
+  --shadow: 0 4px 16px rgba(56,41,31,0.08);
+  --shadow-lift: 0 10px 28px rgba(56,41,31,0.18);
+  --radius: 20px;
+  --radius-sm: 13px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sand: #241C15;
+    --paper: #2F251C;
+    --paper-alt: #3B2E22;
+    --ink: #F3E7D8;
+    --ink-soft: #B8A791;
+    --marigold: #E9A354;
+    --marigold-soft: #4A3A22;
+    --plum: #B592C4;
+    --plum-soft: #3B2E42;
+    --rose: #E08A97;
+    --rose-soft: #422A2E;
+    --sage: #9AC095;
+    --sage-soft: #2A3728;
+    --line: #453626;
+    --root: #8FB894;
+    --root-soft: #33422F;
+    --branch: #D79D69;
+    --branch-soft: #4A3826;
+    --bloom: #E3BE5B;
+    --bloom-soft: #4A3E1E;
+    --shadow: 0 4px 16px rgba(0,0,0,0.35);
+    --shadow-lift: 0 10px 28px rgba(0,0,0,0.5);
+  }
+}
+
+:root[data-theme="dark"] {
+  --sand: #241C15; --paper: #2F251C; --paper-alt: #3B2E22; --ink: #F3E7D8; --ink-soft: #B8A791;
+  --marigold: #E9A354; --marigold-soft: #4A3A22; --plum: #B592C4; --plum-soft: #3B2E42;
+  --rose: #E08A97; --rose-soft: #422A2E; --sage: #9AC095; --sage-soft: #2A3728; --line: #453626;
+  --root: #8FB894; --root-soft: #33422F; --branch: #D79D69; --branch-soft: #4A3826;
+  --bloom: #E3BE5B; --bloom-soft: #4A3E1E;
+  --shadow: 0 4px 16px rgba(0,0,0,0.35); --shadow-lift: 0 10px 28px rgba(0,0,0,0.5);
+}
+:root[data-theme="light"] {
+  --sand: #FBEEDD; --paper: #FFFBF5; --paper-alt: #F3E1C8; --ink: #38291F; --ink-soft: #8C7860;
+  --marigold: #D98A34; --marigold-soft: #F3D9AE; --plum: #5B4066; --plum-soft: #E7DCEC;
+  --rose: #BE5B6C; --rose-soft: #F5DCE0; --sage: #6E8F6B; --sage-soft: #DCE8D9; --line: #EBDCC5;
+  --root: #4B6B4E; --root-soft: #DCE6DC; --branch: #B97A4C; --branch-soft: #F0DCC7;
+  --bloom: #B8901F; --bloom-soft: #F2E4BA;
+  --shadow: 0 4px 16px rgba(56,41,31,0.08); --shadow-lift: 0 10px 28px rgba(56,41,31,0.18);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--sand);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.tdah-root {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  background: var(--sand);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.app-header {
+  padding: 22px 20px 12px;
+  position: sticky;
+  top: 0;
+  background: var(--sand);
+  z-index: 5;
+}
+
+.header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+
+.header-icon-btn {
+  background: var(--paper-alt);
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.app-header .subdate {
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.app-header .subdate.plain { text-transform: none; }
+
+.app-main {
+  flex: 1;
+  padding: 4px 16px 116px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .screen-enter { animation: screenIn 0.22s ease both; }
+}
+@keyframes screenIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.card {
+  background: var(--paper);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+
+.card h2 {
+  margin: 0 0 12px;
+  font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+}
+
+.hint-card {
+  background: var(--marigold-soft);
+  border: 1px solid var(--marigold);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+.hint-card .hint-label {
+  font-weight: 800;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.75;
+}
+
+.empty-state {
+  color: var(--ink-soft);
+  font-size: 14px;
+  text-align: center;
+  padding: 20px 10px;
+  line-height: 1.5;
+}
+
+/* Bottom nav */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+  z-index: 10;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 7px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 10px;
+  cursor: pointer;
+}
+.nav-btn .nav-icon { font-size: 18px; line-height: 1; }
+.nav-btn.active { color: var(--marigold); background: var(--marigold-soft); }
+.nav-btn:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--marigold);
+  outline-offset: 2px;
+}
+
+/* Task checklist */
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--line);
+}
+.task-item:last-child { border-bottom: none; }
+
+.checkbox {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--marigold);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  color: var(--paper);
+  font-size: 14px;
+}
+.checkbox.checked { background: var(--marigold); }
+
+.task-text { font-size: 15px; font-weight: 600; flex: 1; }
+.task-text.done { text-decoration: line-through; color: var(--ink-soft); }
+
+.remove-btn {
+  background: none; border: none; color: var(--ink-soft);
+  font-size: 17px; cursor: pointer; padding: 4px 8px; line-height: 1; flex-shrink: 0;
+}
+.remove-btn:hover { color: var(--rose); }
+
+/* Inputs */
+.input-row { display: flex; gap: 8px; }
+
+input[type="text"], input[type="time"], textarea {
+  width: 100%;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  outline: none;
+}
+input[type="time"] { font-variant-numeric: tabular-nums; }
+input:focus, textarea:focus { border-color: var(--marigold); }
+textarea { resize: vertical; min-height: 60px; font-weight: 500; }
+
+label.field-label {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 7px;
+  display: block;
+}
+
+.field-group { margin-bottom: 16px; }
+.field-group:last-child { margin-bottom: 0; }
+
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 13px 18px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+}
+.btn-primary { background: var(--marigold); color: var(--paper); }
+.btn-secondary { background: var(--paper-alt); color: var(--ink); }
+.btn-block { width: 100%; }
+
+.two-col { display: flex; gap: 12px; }
+.two-col > div, .two-col > button { flex: 1; min-width: 0; }
+
+/* Face picker */
+.face-picker { display: flex; gap: 6px; }
+.face-btn {
+  flex: 1;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  border-radius: var(--radius-sm);
+  padding: 9px 0;
+  font-size: 21px;
+  cursor: pointer;
+}
+.face-btn.selected { border-color: var(--marigold); background: var(--marigold-soft); }
+
+/* Log list items */
+.log-item { display: flex; gap: 12px; padding: 10px 2px; border-bottom: 1px solid var(--line); align-items: flex-start; }
+.log-item:last-child { border-bottom: none; }
+
+.log-time {
+  font-weight: 800; font-size: 12.5px; font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background: var(--marigold-soft);
+  border-radius: 8px; padding: 3px 8px; flex-shrink: 0;
+  white-space: nowrap;
+}
+.log-item.note .log-time { background: var(--sage-soft); }
+
+.notes-sheet-list { max-height: 55vh; overflow-y: auto; margin: -4px -4px 4px; padding: 4px; }
+
+.log-body { flex: 1; min-width: 0; }
+.log-title { font-weight: 700; font-size: 14.5px; word-wrap: break-word; }
+.log-sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 1px; }
+
+/* Hour schedule (Planificar) */
+.hour-list { display: flex; flex-direction: column; }
+.hour-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 2px;
+  border-bottom: 1px solid var(--line);
+}
+.hour-row:last-child { border-bottom: none; }
+.hour-label {
+  width: 48px;
+  flex-shrink: 0;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.hour-row input.hour-input {
+  border: none;
+  border-bottom: 2px solid var(--line);
+  background: transparent;
+  border-radius: 0;
+  padding: 7px 2px;
+  font-size: 14.5px;
+  width: 100%;
+}
+.hour-row input.hour-input:focus { border-bottom-color: var(--marigold); }
+
+/* FABs */
+.fab-container {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  bottom: 90px;
+  pointer-events: none;
+  z-index: 8;
+}
+.fab {
+  position: absolute;
+  right: 20px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: var(--shadow-lift);
+  pointer-events: auto;
+  display: flex; align-items: center; justify-content: center;
+}
+.fab-note { background: var(--sage-soft); bottom: 66px; }
+.fab-notes-list { background: var(--plum-soft); bottom: 0; }
+
+/* Sheet / modal */
+.sheet-backdrop {
+  position: fixed; inset: 0; background: rgba(30, 20, 12, 0.4);
+  z-index: 20; display: flex; align-items: flex-end; justify-content: center;
+}
+.sheet {
+  width: 100%; max-width: 480px; background: var(--sand);
+  border-radius: 26px 26px 0 0;
+  padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sheet { animation: slideUp 0.2s ease-out; }
+  .saved-toast { animation: fadeInOut 1.8s ease; }
+}
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.sheet h2 {
+  margin: 0 0 16px;
+  font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
+  font-size: 19px; font-weight: 800;
+}
+
+.sheet-actions { display: flex; gap: 10px; margin-top: 18px; }
+.sheet-actions .btn { flex: 1; }
+
+/* Historial */
+.history-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 2px; cursor: pointer; border-bottom: 1px solid var(--line);
+}
+.history-row:last-child { border-bottom: none; }
+.history-date { flex: 1; min-width: 0; }
+.history-date .d1 { font-weight: 800; font-size: 14.5px; text-transform: capitalize; }
+.history-date .d2 { font-size: 12px; color: var(--ink-soft); font-weight: 600; }
+.history-emojis { font-size: 18px; display: flex; gap: 6px; flex-shrink: 0; }
+
+.history-detail { padding: 4px 2px 16px; border-bottom: 1px solid var(--line); display: none; }
+.history-detail.open { display: block; }
+
+.detail-block { margin-bottom: 14px; }
+.detail-block:last-child { margin-bottom: 0; }
+.detail-block h3 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--ink-soft); margin: 0 0 6px; font-weight: 800;
+}
+.detail-block p { margin: 2px 0; font-size: 14px; font-weight: 600; }
+
+/* Valores / objetivos / acciones */
+.value-card { border-left: 5px solid var(--root); }
+.value-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+input.value-name {
+  flex: 1; min-width: 0; border: none; border-bottom: 2px solid transparent;
+  background: transparent; color: var(--ink);
+  font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
+  font-size: 17px; font-weight: 800; padding: 4px 2px;
+}
+input.value-name:focus { border-bottom-color: var(--root); outline: none; }
+.badge-example {
+  font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;
+  background: var(--root-soft); color: var(--root); border-radius: 999px; padding: 3px 9px; flex-shrink: 0;
+}
+.progress-chip {
+  font-size: 12px; font-weight: 800; color: var(--ink-soft); background: var(--paper-alt);
+  border-radius: 999px; padding: 4px 10px; flex-shrink: 0; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.objectives-wrap {
+  margin: 10px 0 4px 10px; padding-left: 16px; border-left: 3px solid var(--branch-soft);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.objective-head { display: flex; align-items: center; gap: 8px; }
+.objective-icon { font-size: 15px; flex-shrink: 0; }
+input.objective-text {
+  flex: 1; min-width: 0; border: none; border-bottom: 2px solid transparent;
+  background: transparent; color: var(--ink); font-size: 15px; font-weight: 700; padding: 4px 2px;
+}
+input.objective-text:focus { border-bottom-color: var(--branch); outline: none; }
+.actions-wrap {
+  margin: 8px 0 0 8px; padding-left: 16px; border-left: 3px solid var(--bloom-soft);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.action-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+.action-checkbox {
+  width: 21px; height: 21px; border-radius: 50%; border: 2px solid var(--bloom); flex-shrink: 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; background: var(--paper); color: var(--paper); font-size: 11px;
+}
+.action-checkbox.checked { background: var(--bloom); }
+input.action-text {
+  flex: 1; min-width: 0; border: none; border-bottom: 2px solid transparent;
+  background: transparent; color: var(--ink); font-size: 14px; font-weight: 500; padding: 4px 2px;
+}
+input.action-text.done { color: var(--ink-soft); text-decoration: line-through; }
+input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
+.add-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.add-row input {
+  flex: 1; min-width: 0; border: 1.5px dashed var(--line); background: transparent; color: var(--ink);
+  border-radius: var(--radius-sm); padding: 8px 12px; font-size: 13.5px; font-weight: 600;
+}
+.add-row input::placeholder { color: var(--ink-soft); }
+.add-row input:focus { border-color: var(--ink-soft); border-style: solid; outline: none; }
+.add-row button {
+  border: none; border-radius: var(--radius-sm); width: 32px; height: 32px; flex-shrink: 0;
+  font-size: 16px; font-weight: 800; cursor: pointer; color: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.backup-note {
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+.saved-toast {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+  background: var(--sage); color: var(--paper);
+  padding: 11px 22px; border-radius: 999px; font-weight: 800; font-size: 13.5px;
+  box-shadow: var(--shadow-lift); z-index: 30;
+  max-width: 85%; text-align: center;
+}
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, 10px); }
+  15% { opacity: 1; transform: translate(-50%, 0); }
+  85% { opacity: 1; }
+  100% { opacity: 0; }
+}
+</style>
+
+<div class="tdah-root">
+  <div class="app-shell">
+    <div class="app-header">
+      <div class="header-row">
+        <div>
+          <h1 id="headerTitle">Hoy</h1>
+          <div class="subdate" id="headerSubtitle"></div>
+        </div>
+        <button class="header-icon-btn" id="headerBackupBtn" title="Copia de seguridad">💾</button>
+      </div>
+    </div>
+    <main class="app-main" id="screen"></main>
+    <nav class="bottom-nav" id="bottomNav">
+      <button class="nav-btn" data-tab="hoy"><span class="nav-icon">🏠</span><span>Hoy</span></button>
+      <button class="nav-btn" data-tab="planificar"><span class="nav-icon">📅</span><span>Planificar</span></button>
+      <button class="nav-btn" data-tab="cierre"><span class="nav-icon">🌙</span><span>Cierre</span></button>
+      <button class="nav-btn" data-tab="valores"><span class="nav-icon">🌱</span><span>Valores</span></button>
+      <button class="nav-btn" data-tab="historial"><span class="nav-icon">📊</span><span>Historial</span></button>
+    </nav>
+    <div id="fabRoot"></div>
+    <div id="modalRoot"></div>
+    <div id="toastRoot"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  const pad = (n) => n.toString().padStart(2, "0");
+  const fmtDate = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const todayStr = () => fmtDate(new Date());
+  const addDays = (dateStr, delta) => {
+    const [y, m, d] = dateStr.split("-").map(Number);
+    const dt = new Date(y, m - 1, d);
+    dt.setDate(dt.getDate() + delta);
+    return fmtDate(dt);
+  };
+  const humanDate = (dateStr) => {
+    const [y, m, d] = dateStr.split("-").map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+  };
+  const shortDate = (dateStr) => {
+    const [y, m, d] = dateStr.split("-").map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+  };
+  const nowTime = () => { const d = new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+
+  const HOURS = (() => { const arr = []; for (let h = 7; h <= 22; h++) arr.push(pad(h) + ":00"); return arr; })();
+
+  const STORAGE_KEY = "tdah-tracker-v2";
+  const cryptoId = () => Math.random().toString(36).slice(2, 10);
+  const sample = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
+  const randTime = (h1, h2) => `${pad(h1 + Math.floor(Math.random() * (h2 - h1)))}:${pad(sample([0, 15, 30, 45]))}`;
+
+  const emptyDay = () => ({
+    planning: HOURS.map((h) => ({ hour: h, text: "", done: false })),
+    sleep: null,
+    balance: null,
+  });
+
+  function normalizeValues(values) {
+    if (!Array.isArray(values)) return [];
+    return values.map((v) => ({
+      id: v.id || cryptoId(),
+      name: v.name || "",
+      example: !!v.example,
+      objectives: Array.isArray(v.objectives) ? v.objectives.map((o) => ({
+        id: o.id || cryptoId(),
+        text: o.text || "",
+        actions: Array.isArray(o.actions) ? o.actions.map((a) => ({ id: a.id || cryptoId(), text: a.text || "", done: !!a.done })) : [],
+      })) : [],
+    }));
+  }
+
+  function normalizeStore(store) {
+    const days = {};
+    Object.keys((store && store.days) || {}).forEach((k) => {
+      const d = (store.days[k]) || {};
+      const validPlanning = Array.isArray(d.planning) && d.planning.length > 0 && d.planning[0] && typeof d.planning[0] === "object" && "hour" in d.planning[0];
+      days[k] = {
+        planning: validPlanning ? d.planning : emptyDay().planning,
+        sleep: d.sleep || null,
+        balance: d.balance || null,
+      };
+    });
+    return {
+      days,
+      notes: Array.isArray(store && store.notes) ? store.notes : [],
+      values: normalizeValues(store && store.values),
+    };
+  }
+
+  function generateSeed() {
+    const days = {};
+    const taskPool = ["Responder emails", "Hacer la compra", "Terminar informe", "Llamar al médico", "Repasar apuntes", "Organizar escritorio", "Preparar cena", "Salir a correr"];
+    const positivesPool = ["He salido a pasear", "He terminado una tarea pendiente", "He hablado con un amigo", "He comido saludable", "He dormido una siesta corta", "He hecho ejercicio", "He avanzado en el proyecto", "He tenido un momento de calma"];
+    const notePool = ["Idea: agrupar tareas por energía, no solo por hora", "Recordar comprar un cuaderno nuevo", "Pensar cómo trocear el proyecto grande en pasos más pequeños", "Probar a dejar el móvil fuera del dormitorio"];
+
+    for (let i = 6; i >= 1; i--) {
+      const dateStr = addDays(todayStr(), -i);
+      const day = emptyDay();
+      const nFilled = 3 + Math.floor(Math.random() * 3);
+      const chosenHours = shuffle(HOURS).slice(0, nFilled);
+      day.planning.forEach((slot) => {
+        if (chosenHours.includes(slot.hour)) {
+          slot.text = sample(taskPool);
+          slot.done = Math.random() > 0.3;
+        }
+      });
+      day.sleep = { bedTime: randTime(22, 24), wakeTime: randTime(6, 8), quality: 1 + Math.floor(Math.random() * 5) };
+      day.balance = {
+        mood: 1 + Math.floor(Math.random() * 5),
+        positives: shuffle(positivesPool).slice(0, 3),
+        resisted: "He conseguido " + sample(["ordenar la mesa", "enviar ese correo pendiente", "hacer la llamada que evitaba", "empezar la tarea difícil"]),
+        tomorrowFocus: sample(["Avanzar en el proyecto", "Organizar la semana", "Salir a caminar", "Terminar la lectura pendiente"]),
+      };
+      days[dateStr] = day;
+    }
+
+    const notes = shuffle(notePool).slice(0, 3).map((text, idx) => ({ id: cryptoId(), text, dateStr: addDays(todayStr(), -1 - idx), time: randTime(9, 21) }));
+
+    const today = todayStr();
+    const todayDay = emptyDay();
+    const slot10 = todayDay.planning.find((s) => s.hour === "10:00");
+    if (slot10) slot10.text = "Terminar el prototipo";
+    const slot08 = todayDay.planning.find((s) => s.hour === "08:00");
+    if (slot08) { slot08.text = "Salir a caminar 20 min"; slot08.done = true; }
+    days[today] = todayDay;
+    days[addDays(today, 1)] = emptyDay();
+
+    const values = [
+      {
+        id: cryptoId(),
+        name: "Amistad",
+        example: true,
+        objectives: [
+          {
+            id: cryptoId(),
+            text: "Llamar a un amigo a la semana",
+            actions: [{ id: cryptoId(), text: "Martes a las 10h, llamo una hora que me viene bien", done: false }],
+          },
+        ],
+      },
+    ];
+
+    return { days, notes, values };
+  }
+
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return normalizeStore(JSON.parse(raw));
+    } catch (e) {}
+    const seed = generateSeed();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(seed));
+    return seed;
+  }
+  function saveData() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data)); } catch (e) {}
+  }
+
+  const FACES = ["😣", "😕", "😐", "🙂", "😄"];
+  const faceOr = (value, fallback) => (value ? FACES[value - 1] : fallback === undefined ? "" : fallback);
+  const facePicker = (name, value) =>
+    `<div class="face-picker" data-face-group="${name}">${FACES.map((f, i) => `<button type="button" class="face-btn${value === i + 1 ? " selected" : ""}" data-face-value="${i + 1}">${f}</button>`).join("")}</div>`;
+
+  const TITLES = { hoy: "Hoy", planificar: "Planificar mañana", cierre: "Cierre del día", valores: "Valores y objetivos", historial: "Historial" };
+
+  const state = { tab: "hoy", data: loadData(), modalType: null, cierreQuality: 0, cierreMood: 0 };
+
+  function ensureDays() {
+    const today = todayStr(), tomorrow = addDays(today, 1);
+    if (!state.data.days[today]) state.data.days[today] = emptyDay();
+    if (!state.data.days[tomorrow]) state.data.days[tomorrow] = emptyDay();
+    saveData();
+  }
+
+  /* ---------- Hoy ---------- */
+  function screenHoy() {
+    const today = todayStr();
+    const day = state.data.days[today] || emptyDay();
+    const yesterday = addDays(today, -1);
+    const yFocus = state.data.days[yesterday] && state.data.days[yesterday].balance ? state.data.days[yesterday].balance.tomorrowFocus : null;
+
+    let html = "";
+    if (yFocus) html += `<div class="hint-card"><span class="hint-label">Ayer querías abordar hoy</span>${esc(yFocus)}</div>`;
+
+    const filledSlots = day.planning.filter((s) => s.text && s.text.trim() !== "");
+    html += `<div class="card"><h2><span class="dot" style="background:var(--marigold)"></span>Plan de hoy</h2>`;
+    html += filledSlots.length === 0
+      ? `<div class="empty-state">No planificaste nada anoche.<br>Ve a "Planificar" esta noche para preparar mañana.</div>`
+      : filledSlots.map((s) => `
+        <div class="task-item">
+          <div class="checkbox${s.done ? " checked" : ""}" data-toggle-hour="${s.hour}">${s.done ? "✓" : ""}</div>
+          <div class="task-text${s.done ? " done" : ""}"><span style="font-variant-numeric:tabular-nums;color:var(--ink-soft);font-weight:800;margin-right:8px;">${s.hour}</span>${esc(s.text)}</div>
+        </div>`).join("");
+    html += `</div>`;
+
+    return html;
+  }
+
+  function attachHoy() {
+    const today = todayStr();
+    $$('[data-toggle-hour]').forEach((el) => el.addEventListener("click", () => {
+      const slot = state.data.days[today].planning.find((s) => s.hour === el.dataset.toggleHour);
+      slot.done = !slot.done;
+      saveData();
+      refreshScreen();
+    }));
+  }
+
+  /* ---------- Planificar (agenda vertical por horas) ---------- */
+  function screenPlanificar() {
+    const tomorrow = addDays(todayStr(), 1);
+    const day = state.data.days[tomorrow] || emptyDay();
+    let html = `<div class="card"><h2><span class="dot" style="background:var(--marigold)"></span>Agenda de mañana</h2>`;
+    html += `<div class="hour-list">`;
+    html += day.planning.map((s) => `
+      <div class="hour-row">
+        <div class="hour-label">${s.hour}</div>
+        <input type="text" class="hour-input" data-hour-input="${s.hour}" placeholder="Añade algo para esta hora..." value="${esc(s.text)}">
+      </div>`).join("");
+    html += `</div></div>`;
+    return html;
+  }
+
+  function attachPlanificar() {
+    const tomorrow = addDays(todayStr(), 1);
+    $$('[data-hour-input]').forEach((input) => {
+      input.addEventListener("input", () => {
+        const slot = state.data.days[tomorrow].planning.find((s) => s.hour === input.dataset.hourInput);
+        slot.text = input.value;
+        saveData();
+      });
+    });
+  }
+
+  /* ---------- Cierre ---------- */
+  function screenCierre() {
+    const today = todayStr();
+    const day = state.data.days[today] || emptyDay();
+    state.cierreQuality = day.sleep ? day.sleep.quality : 0;
+    state.cierreMood = day.balance ? day.balance.mood : 0;
+    const positives = day.balance ? day.balance.positives : ["", "", ""];
+
+    return `
+    <div class="card">
+      <h2><span class="dot" style="background:var(--plum)"></span>Sueño</h2>
+      <div class="two-col field-group">
+        <div><label class="field-label">Hora de acostarse</label><input type="time" id="bedTime" value="${day.sleep ? day.sleep.bedTime : "23:00"}"></div>
+        <div><label class="field-label">Hora de levantarse</label><input type="time" id="wakeTime" value="${day.sleep ? day.sleep.wakeTime : "07:00"}"></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Calidad del sueño</label>
+        ${facePicker("quality", state.cierreQuality)}
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="dot" style="background:var(--marigold)"></span>Balance general del día</h2>
+      <div class="field-group">
+        <label class="field-label">¿Cómo te has sentido hoy?</label>
+        ${facePicker("mood", state.cierreMood)}
+      </div>
+    </div>
+    <div class="card">
+      <h2><span class="dot" style="background:var(--sage)"></span>Reflexión</h2>
+      <div class="field-group">
+        <label class="field-label">3 cosas positivas del día</label>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <input type="text" id="pos1" placeholder="Cosa positiva 1" value="${esc(positives[0] || "")}">
+          <input type="text" id="pos2" placeholder="Cosa positiva 2" value="${esc(positives[1] || "")}">
+          <input type="text" id="pos3" placeholder="Cosa positiva 3" value="${esc(positives[2] || "")}">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Algo que has podido hacer aunque te costaba</label>
+        <textarea id="resisted" placeholder="Ej. Empezar esa tarea que llevaba días evitando">${esc(day.balance ? day.balance.resisted : "")}</textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Algo con ganas de abordar mañana</label>
+        <textarea id="tomorrowFocus" placeholder="Ej. Retomar el proyecto personal">${esc(day.balance ? day.balance.tomorrowFocus : "")}</textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" id="cierreSaveBtn">Guardar cierre del día</button>
+  `;
+  }
+
+  function attachCierre() {
+    $$('[data-face-group] .face-btn').forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const group = btn.closest("[data-face-group]");
+        const groupName = group.dataset.faceGroup;
+        const value = Number(btn.dataset.faceValue);
+        if (groupName === "quality") state.cierreQuality = value; else state.cierreMood = value;
+        $$(".face-btn", group).forEach((b) => b.classList.toggle("selected", Number(b.dataset.faceValue) === value));
+      });
+    });
+    $("#cierreSaveBtn").addEventListener("click", () => {
+      const today = todayStr();
+      state.data.days[today].sleep = { bedTime: $("#bedTime").value, wakeTime: $("#wakeTime").value, quality: state.cierreQuality };
+      state.data.days[today].balance = {
+        mood: state.cierreMood,
+        positives: [$("#pos1").value, $("#pos2").value, $("#pos3").value],
+        resisted: $("#resisted").value,
+        tomorrowFocus: $("#tomorrowFocus").value,
+      };
+      saveData();
+      showToast("Guardado ✓");
+    });
+  }
+
+  /* ---------- Valores, objetivos y acciones ---------- */
+  function findValue(vId) { return state.data.values.find((v) => v.id === vId); }
+  function findObjective(vId, oId) { const v = findValue(vId); return v && v.objectives.find((o) => o.id === oId); }
+
+  function addValue(name) {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    state.data.values.push({ id: cryptoId(), name: trimmed, example: false, objectives: [] });
+    saveData();
+    refreshScreen();
+  }
+  function removeValue(vId) {
+    state.data.values = state.data.values.filter((v) => v.id !== vId);
+    saveData();
+    refreshScreen();
+  }
+  function addObjective(vId, text) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    findValue(vId).objectives.push({ id: cryptoId(), text: trimmed, actions: [] });
+    saveData();
+    refreshScreen();
+  }
+  function removeObjective(vId, oId) {
+    const v = findValue(vId);
+    v.objectives = v.objectives.filter((o) => o.id !== oId);
+    saveData();
+    refreshScreen();
+  }
+  function addAction(vId, oId, text) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    findObjective(vId, oId).actions.push({ id: cryptoId(), text: trimmed, done: false });
+    saveData();
+    refreshScreen();
+  }
+  function removeAction(vId, oId, aId) {
+    const o = findObjective(vId, oId);
+    o.actions = o.actions.filter((a) => a.id !== aId);
+    saveData();
+    refreshScreen();
+  }
+  function toggleAction(vId, oId, aId) {
+    const a = findObjective(vId, oId).actions.find((x) => x.id === aId);
+    a.done = !a.done;
+    saveData();
+    refreshScreen();
+  }
+  function objectiveDoneCount(o) { return { done: o.actions.filter((a) => a.done).length, total: o.actions.length }; }
+  function valueDoneCount(v) {
+    let done = 0, total = 0;
+    v.objectives.forEach((o) => { done += o.actions.filter((a) => a.done).length; total += o.actions.length; });
+    return { done, total };
+  }
+
+  function screenValores() {
+    let html = `<div class="hint-card"><span class="hint-label">Cómo funciona</span>🌱 Valores → 🧭 Objetivos → ✅ Acciones concretas. Parte de lo que te importa y ve concretando.</div>`;
+
+    html += `<div class="card">
+      <h2><span class="dot" style="background:var(--root)"></span>Añadir un valor</h2>
+      <div class="input-row">
+        <input type="text" id="newValueInput" placeholder="Ej. Amistad, salud, creatividad...">
+        <button class="btn btn-primary" id="newValueBtn" style="background:var(--root)">Añadir</button>
+      </div>
+    </div>`;
+
+    const values = state.data.values;
+    if (values.length === 0) {
+      html += `<div class="empty-state">Todavía no has añadido ningún valor.<br>Empieza por lo que de verdad te importa ahora mismo.</div>`;
+    } else {
+      html += values.map(renderValueCard).join("");
+    }
+    return html;
+  }
+
+  function renderValueCard(v) {
+    const vd = valueDoneCount(v);
+    const progressText = vd.total > 0 ? `${vd.done}/${vd.total}` : "";
+    return `
+    <div class="card value-card">
+      <div class="value-head">
+        <span class="objective-icon">🌱</span>
+        <input type="text" class="value-name" data-edit-value="${v.id}" value="${esc(v.name)}" placeholder="Nombre del valor">
+        ${v.example ? '<span class="badge-example">Ejemplo</span>' : ""}
+        ${progressText ? `<span class="progress-chip">${progressText}</span>` : ""}
+        <button class="remove-btn" data-remove-value="${v.id}" title="Eliminar valor">✕</button>
+      </div>
+      <div class="objectives-wrap">
+        ${v.objectives.map((o) => renderObjectiveBlock(v, o)).join("")}
+        <div class="add-row">
+          <input type="text" placeholder="+ Objetivo para este valor..." data-new-objective="${v.id}">
+          <button style="background:var(--branch)" data-add-objective-btn="${v.id}" title="Añadir objetivo">+</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function renderObjectiveBlock(v, o) {
+    const od = objectiveDoneCount(o);
+    const progressText = od.total > 0 ? `${od.done}/${od.total}` : "";
+    return `
+    <div class="objective-block">
+      <div class="objective-head">
+        <span class="objective-icon">🧭</span>
+        <input type="text" class="objective-text" data-edit-objective="${v.id}|${o.id}" value="${esc(o.text)}" placeholder="Objetivo">
+        ${progressText ? `<span class="progress-chip">${progressText}</span>` : ""}
+        <button class="remove-btn" data-remove-objective="${v.id}|${o.id}" title="Eliminar objetivo">✕</button>
+      </div>
+      <div class="actions-wrap">
+        ${o.actions.map((a) => renderActionRow(v, o, a)).join("")}
+        <div class="add-row">
+          <input type="text" placeholder="+ Acción concreta..." data-new-action="${v.id}|${o.id}">
+          <button style="background:var(--bloom)" data-add-action-btn="${v.id}|${o.id}" title="Añadir acción">+</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function renderActionRow(v, o, a) {
+    return `
+    <div class="action-row">
+      <div class="action-checkbox${a.done ? " checked" : ""}" data-toggle-action="${v.id}|${o.id}|${a.id}">${a.done ? "✓" : ""}</div>
+      <input type="text" class="action-text${a.done ? " done" : ""}" data-edit-action="${v.id}|${o.id}|${a.id}" value="${esc(a.text)}" placeholder="Acción concreta">
+      <button class="remove-btn" data-remove-action="${v.id}|${o.id}|${a.id}" title="Eliminar acción">✕</button>
+    </div>`;
+  }
+
+  function attachValores() {
+    $$('[data-edit-value]').forEach((input) => input.addEventListener("input", () => {
+      findValue(input.dataset.editValue).name = input.value;
+      saveData();
+    }));
+    $$('[data-edit-objective]').forEach((input) => input.addEventListener("input", () => {
+      const [vId, oId] = input.dataset.editObjective.split("|");
+      findObjective(vId, oId).text = input.value;
+      saveData();
+    }));
+    $$('[data-edit-action]').forEach((input) => input.addEventListener("input", () => {
+      const [vId, oId, aId] = input.dataset.editAction.split("|");
+      findObjective(vId, oId).actions.find((a) => a.id === aId).text = input.value;
+      saveData();
+    }));
+
+    $$('[data-remove-value]').forEach((el) => el.addEventListener("click", () => removeValue(el.dataset.removeValue)));
+    $$('[data-remove-objective]').forEach((el) => el.addEventListener("click", () => {
+      const [vId, oId] = el.dataset.removeObjective.split("|");
+      removeObjective(vId, oId);
+    }));
+    $$('[data-remove-action]').forEach((el) => el.addEventListener("click", () => {
+      const [vId, oId, aId] = el.dataset.removeAction.split("|");
+      removeAction(vId, oId, aId);
+    }));
+    $$('[data-toggle-action]').forEach((el) => el.addEventListener("click", () => {
+      const [vId, oId, aId] = el.dataset.toggleAction.split("|");
+      toggleAction(vId, oId, aId);
+    }));
+
+    $$('[data-new-objective]').forEach((input) => {
+      const vId = input.dataset.newObjective;
+      const submit = () => addObjective(vId, input.value);
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+      const btn = $(`[data-add-objective-btn="${vId}"]`);
+      if (btn) btn.addEventListener("click", submit);
+    });
+    $$('[data-new-action]').forEach((input) => {
+      const key = input.dataset.newAction;
+      const [vId, oId] = key.split("|");
+      const submit = () => addAction(vId, oId, input.value);
+      input.addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+      const btn = $(`[data-add-action-btn="${key}"]`);
+      if (btn) btn.addEventListener("click", submit);
+    });
+
+    const newValueInput = $("#newValueInput");
+    const submitValue = () => { addValue(newValueInput.value); };
+    $("#newValueBtn").addEventListener("click", submitValue);
+    newValueInput.addEventListener("keydown", (e) => { if (e.key === "Enter") submitValue(); });
+  }
+
+  /* ---------- Historial ---------- */
+  function screenHistorial() {
+    const today = todayStr();
+    const dates = Object.keys(state.data.days).filter((d) => d <= today).sort((a, b) => (a < b ? 1 : -1));
+    let html = `<div class="card"><h2><span class="dot" style="background:var(--marigold)"></span>Historial</h2>`;
+    if (dates.length === 0) html += `<div class="empty-state">Todavía no hay días registrados.</div>`;
+    dates.forEach((dateStr) => {
+      const day = state.data.days[dateStr];
+      const filled = day.planning.filter((s) => s.text && s.text.trim() !== "");
+      const doneCount = filled.filter((s) => s.done).length;
+      html += `<div>
+        <div class="history-row" data-history-toggle="${dateStr}">
+          <div class="history-date">
+            <div class="d1">${dateStr === today ? "Hoy" : humanDate(dateStr)}</div>
+            <div class="d2">${filled.length > 0 ? `${doneCount}/${filled.length} tareas completadas` : "Sin agenda registrada"}</div>
+          </div>
+          <div class="history-emojis">${day.balance ? faceOr(day.balance.mood) : ""}${day.sleep ? faceOr(day.sleep.quality) : ""}</div>
+        </div>
+        <div class="history-detail" id="detail-${dateStr}">${historyDetail(day)}</div>
+      </div>`;
+    });
+    html += `</div>`;
+
+    html += `<div class="card">
+      <h2><span class="dot" style="background:var(--plum)"></span>Copia de seguridad</h2>
+      <p class="backup-note">Las notas se guardan en este dispositivo y este navegador. Si el navegador borra los datos o cambias de dispositivo, expórtalas para no perderlas.</p>
+      <div class="two-col">
+        <button class="btn btn-secondary" id="exportBtn">⬇️ Exportar</button>
+        <button class="btn btn-secondary" id="importBtn">⬆️ Importar</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" style="display:none;">
+    </div>`;
+
+    return html;
+  }
+
+  function historyDetail(day) {
+    let html = "";
+    if (day.sleep) html += `<div class="detail-block"><h3>Sueño</h3><p>${day.sleep.bedTime} — ${day.sleep.wakeTime} · Calidad ${faceOr(day.sleep.quality, "sin registrar")}</p></div>`;
+    if (day.balance) {
+      html += `<div class="detail-block"><h3>Balance</h3><p>Ánimo general: ${faceOr(day.balance.mood, "sin registrar")}</p>`;
+      const pos = day.balance.positives.filter(Boolean);
+      if (pos.length) html += `<p>Positivo: ${pos.map(esc).join(" · ")}</p>`;
+      if (day.balance.resisted) html += `<p>Superado: ${esc(day.balance.resisted)}</p>`;
+      if (day.balance.tomorrowFocus) html += `<p>Foco siguiente día: ${esc(day.balance.tomorrowFocus)}</p>`;
+      html += `</div>`;
+    }
+    const filled = day.planning.filter((s) => s.text && s.text.trim() !== "");
+    if (filled.length) html += `<div class="detail-block"><h3>Agenda del día</h3>${filled.map((s) => `<p>${s.done ? "✅" : "⬜"} ${s.hour} · ${esc(s.text)}</p>`).join("")}</div>`;
+    return html;
+  }
+
+  function attachHistorial() {
+    $$('[data-history-toggle]').forEach((row) => row.addEventListener("click", () => {
+      const dateStr = row.dataset.historyToggle;
+      const detail = $(`#detail-${dateStr}`);
+      const isOpen = detail.classList.contains("open");
+      $$(".history-detail.open").forEach((d) => d.classList.remove("open"));
+      if (!isOpen) detail.classList.add("open");
+    }));
+
+    $("#exportBtn").addEventListener("click", doExport);
+    $("#importBtn").addEventListener("click", () => $("#importFile").click());
+    $("#importFile").addEventListener("change", (e) => {
+      doImportFile(e.target.files[0], refreshScreen);
+      e.target.value = "";
+    });
+  }
+
+  /* ---------- Copia de seguridad (compartida) ---------- */
+  async function doExport() {
+    if (!window.claude || !window.claude.downloads) {
+      showToast("Exportar no está disponible aquí");
+      return;
+    }
+    try {
+      await window.claude.downloads.save({
+        filename: `seguimiento-tdah-${todayStr()}.json`,
+        data: JSON.stringify(state.data, null, 2),
+      });
+      showToast("Exportado ✓");
+    } catch (err) {
+      if (err && err.code !== "declined") showToast("No se pudo exportar");
+    }
+  }
+
+  function doImportFile(file, onDone) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        state.data = normalizeStore(parsed && parsed.days ? parsed : { days: parsed, notes: [], values: [] });
+        ensureDays();
+        saveData();
+        showToast("Datos importados ✓");
+        if (onDone) onDone();
+      } catch (err) {
+        showToast("El archivo no es válido");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function renderBackupSheet() {
+    $("#modalRoot").innerHTML = `
+      <div class="sheet-backdrop" id="sheetBackdrop">
+        <div class="sheet" id="sheetBody">
+          <h2>💾 Copia de seguridad</h2>
+          <p class="backup-note">Todo lo anotado (plan, sueño, notas, valores...) se guarda solo en este navegador. Si al volver a abrir la app ves que se ha borrado, importa aquí tu última copia exportada. Exporta con frecuencia para no perder nada.</p>
+          <div class="two-col">
+            <button class="btn btn-secondary" id="modalExportBtn">⬇️ Exportar</button>
+            <button class="btn btn-secondary" id="modalImportBtn">⬆️ Importar</button>
+          </div>
+          <input type="file" id="modalImportFile" accept="application/json" style="display:none;">
+          <div class="sheet-actions">
+            <button class="btn btn-secondary btn-block" id="modalCancel">Cerrar</button>
+          </div>
+        </div>
+      </div>`;
+    $("#sheetBackdrop").addEventListener("click", (e) => { if (e.target.id === "sheetBackdrop") closeModal(); });
+    $("#modalCancel").addEventListener("click", closeModal);
+    $("#modalExportBtn").addEventListener("click", doExport);
+    $("#modalImportBtn").addEventListener("click", () => $("#modalImportFile").click());
+    $("#modalImportFile").addEventListener("change", (e) => {
+      doImportFile(e.target.files[0], () => { closeModal(); refreshScreen(); });
+      e.target.value = "";
+    });
+  }
+
+  /* ---------- Modal: añadir nota ---------- */
+  function renderAddNoteSheet() {
+    $("#modalRoot").innerHTML = `
+      <div class="sheet-backdrop" id="sheetBackdrop">
+        <div class="sheet" id="sheetBody">
+          <h2>📝 Nueva nota</h2>
+          <div class="field-group">
+            <label class="field-label">¿Qué quieres apuntar?</label>
+            <textarea id="modalNoteText" placeholder="Escribe una idea, un recordatorio..." style="min-height:110px;"></textarea>
+          </div>
+          <div class="sheet-actions">
+            <button class="btn btn-secondary" id="modalCancel">Cancelar</button>
+            <button class="btn btn-primary" id="modalSave">Guardar</button>
+          </div>
+        </div>
+      </div>`;
+
+    $("#sheetBackdrop").addEventListener("click", (e) => { if (e.target.id === "sheetBackdrop") closeModal(); });
+    $("#modalCancel").addEventListener("click", closeModal);
+    $("#modalSave").addEventListener("click", () => {
+      const text = $("#modalNoteText").value.trim();
+      if (!text) return;
+      state.data.notes.unshift({ id: cryptoId(), text, dateStr: todayStr(), time: nowTime() });
+      saveData();
+      closeModal();
+    });
+  }
+
+  /* ---------- Modal: consultar bloc de notas ---------- */
+  function renderNotesListSheet() {
+    const notes = [...state.data.notes].sort((a, b) => (b.dateStr + b.time).localeCompare(a.dateStr + a.time));
+    $("#modalRoot").innerHTML = `
+      <div class="sheet-backdrop" id="sheetBackdrop">
+        <div class="sheet" id="sheetBody">
+          <h2>🗒️ Bloc de notas</h2>
+          <div class="notes-sheet-list">
+            ${notes.length === 0
+              ? `<div class="empty-state">Tu bloc de notas está vacío.<br>Usa el botón 📝 para apuntar una idea.</div>`
+              : notes.map((n) => `
+                <div class="log-item note">
+                  <div class="log-time">${shortDate(n.dateStr)} · ${n.time}</div>
+                  <div class="log-body"><div class="log-title">${esc(n.text)}</div></div>
+                  <button class="remove-btn" data-remove-note="${n.id}">✕</button>
+                </div>`).join("")}
+          </div>
+          <div class="sheet-actions">
+            <button class="btn btn-secondary btn-block" id="modalCancel">Cerrar</button>
+          </div>
+        </div>
+      </div>`;
+
+    $("#sheetBackdrop").addEventListener("click", (e) => { if (e.target.id === "sheetBackdrop") closeModal(); });
+    $("#modalCancel").addEventListener("click", closeModal);
+    $$('[data-remove-note]').forEach((el) => el.addEventListener("click", () => {
+      state.data.notes = state.data.notes.filter((n) => n.id !== el.dataset.removeNote);
+      saveData();
+      renderNotesListSheet();
+    }));
+  }
+
+  function renderModal() {
+    if (!state.modalType) { $("#modalRoot").innerHTML = ""; return; }
+    if (state.modalType === "notesList") { renderNotesListSheet(); return; }
+    if (state.modalType === "backup") { renderBackupSheet(); return; }
+    renderAddNoteSheet();
+  }
+
+  function openModal(type) { state.modalType = type; renderModal(); }
+  function closeModal() { state.modalType = null; renderModal(); }
+
+  /* ---------- Toast ---------- */
+  let toastTimer = null;
+  function showToast(msg) {
+    clearTimeout(toastTimer);
+    $("#toastRoot").innerHTML = `<div class="saved-toast">${esc(msg)}</div>`;
+    toastTimer = setTimeout(() => { $("#toastRoot").innerHTML = ""; }, 1800);
+  }
+
+  /* ---------- Shell / render ---------- */
+  const SCREENS = { hoy: screenHoy, planificar: screenPlanificar, cierre: screenCierre, valores: screenValores, historial: screenHistorial };
+  const ATTACHERS = { hoy: attachHoy, planificar: attachPlanificar, cierre: attachCierre, valores: attachValores, historial: attachHistorial };
+
+  function refreshScreen() {
+    const el = $("#screen");
+    el.innerHTML = SCREENS[state.tab]();
+    el.classList.remove("screen-enter"); void el.offsetWidth; el.classList.add("screen-enter");
+    ATTACHERS[state.tab]();
+  }
+
+  function render() {
+    ensureDays();
+    const today = todayStr(), tomorrow = addDays(today, 1);
+    $("#headerTitle").textContent = TITLES[state.tab];
+    $("#headerSubtitle").textContent = state.tab === "planificar" ? humanDate(tomorrow) : state.tab === "valores" ? "Lo que te importa, paso a paso" : humanDate(today);
+    $("#headerSubtitle").classList.toggle("plain", state.tab === "valores");
+    $$(".nav-btn").forEach((btn) => btn.classList.toggle("active", btn.dataset.tab === state.tab));
+    $("#fabRoot").innerHTML = state.tab === "hoy" ? `
+      <div class="fab-container">
+        <button class="fab fab-note" id="fabNote" title="Añadir nota">📝</button>
+        <button class="fab fab-notes-list" id="fabNotesList" title="Consultar bloc de notas">🗒️</button>
+      </div>` : "";
+    if (state.tab === "hoy") {
+      $("#fabNote").addEventListener("click", () => openModal("note"));
+      $("#fabNotesList").addEventListener("click", () => openModal("notesList"));
+    }
+    refreshScreen();
+  }
+
+  $$(".nav-btn").forEach((btn) => btn.addEventListener("click", () => { state.tab = btn.dataset.tab; render(); }));
+  $("#headerBackupBtn").addEventListener("click", () => openModal("backup"));
+
+  render();
+})();
+</script>
