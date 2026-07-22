@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Seguimiento TDAH</title>
 <meta name="description" content="Seguimiento diario para TDAH: agenda, sueño, valores y notas. Diseñado por el Dr. Jordi Risco.">
-<meta name="theme-color" content="#FBEEDD">
+<meta name="theme-color" content="#F5F7F3">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Seguimiento TDAH">
@@ -12,74 +12,71 @@
 <link rel="apple-touch-icon" href="icon.png">
 <style>
 :root {
-  --sand: #FBEEDD;
-  --paper: #FFFBF5;
-  --paper-alt: #F3E1C8;
-  --ink: #38291F;
-  --ink-soft: #8C7860;
-  --marigold: #D98A34;
-  --marigold-soft: #F3D9AE;
-  --plum: #5B4066;
-  --plum-soft: #E7DCEC;
-  --rose: #BE5B6C;
-  --rose-soft: #F5DCE0;
-  --sage: #6E8F6B;
-  --sage-soft: #DCE8D9;
-  --line: #EBDCC5;
-  --root: #4B6B4E;
-  --root-soft: #DCE6DC;
-  --branch: #B97A4C;
-  --branch-soft: #F0DCC7;
-  --bloom: #B8901F;
-  --bloom-soft: #F2E4BA;
-  --shadow: 0 4px 16px rgba(56,41,31,0.08);
-  --shadow-lift: 0 10px 28px rgba(56,41,31,0.18);
+  --sand: #F5F7F3;
+  --paper: #FFFFFF;
+  --paper-alt: #EBEFE9;
+  --ink: #1B1F1B;
+  --ink-soft: #69716A;
+  --marigold: #4F8C4C;
+  --marigold-soft: #E2EFDF;
+  --plum: #2E3A2C;
+  --plum-soft: #E5E8E3;
+  --sage: #7CB877;
+  --sage-soft: #E2EFDF;
+  --line: #E2E7DF;
+  --root: #33502E;
+  --root-soft: #DCE8D9;
+  --branch: #4F8C4C;
+  --branch-soft: #E2EFDF;
+  --bloom: #93C98A;
+  --bloom-soft: #EBF5E8;
+  --shadow: 0 4px 16px rgba(20,25,20,0.08);
+  --shadow-lift: 0 10px 28px rgba(20,25,20,0.16);
   --radius: 20px;
   --radius-sm: 13px;
+  --nav-clear: calc(70px + env(safe-area-inset-bottom));
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --sand: #241C15;
-    --paper: #2F251C;
-    --paper-alt: #3B2E22;
-    --ink: #F3E7D8;
-    --ink-soft: #B8A791;
-    --marigold: #E9A354;
-    --marigold-soft: #4A3A22;
-    --plum: #B592C4;
-    --plum-soft: #3B2E42;
-    --rose: #E08A97;
-    --rose-soft: #422A2E;
-    --sage: #9AC095;
-    --sage-soft: #2A3728;
-    --line: #453626;
-    --root: #8FB894;
-    --root-soft: #33422F;
-    --branch: #D79D69;
-    --branch-soft: #4A3826;
-    --bloom: #E3BE5B;
-    --bloom-soft: #4A3E1E;
-    --shadow: 0 4px 16px rgba(0,0,0,0.35);
-    --shadow-lift: 0 10px 28px rgba(0,0,0,0.5);
+    --sand: #12150E;
+    --paper: #1C221A;
+    --paper-alt: #232B20;
+    --ink: #EAF0E6;
+    --ink-soft: #93A08C;
+    --marigold: #6CB568;
+    --marigold-soft: #22301D;
+    --plum: #C6D0C1;
+    --plum-soft: #3C453A;
+    --sage: #8FC989;
+    --sage-soft: #22301D;
+    --line: #2C3527;
+    --root: #5E9C59;
+    --root-soft: #1E2A1B;
+    --branch: #7FC077;
+    --branch-soft: #223020;
+    --bloom: #A6D99C;
+    --bloom-soft: #26331F;
+    --shadow: 0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lift: 0 10px 28px rgba(0,0,0,0.55);
   }
 }
 
 :root[data-theme="dark"] {
-  --sand: #241C15; --paper: #2F251C; --paper-alt: #3B2E22; --ink: #F3E7D8; --ink-soft: #B8A791;
-  --marigold: #E9A354; --marigold-soft: #4A3A22; --plum: #B592C4; --plum-soft: #3B2E42;
-  --rose: #E08A97; --rose-soft: #422A2E; --sage: #9AC095; --sage-soft: #2A3728; --line: #453626;
-  --root: #8FB894; --root-soft: #33422F; --branch: #D79D69; --branch-soft: #4A3826;
-  --bloom: #E3BE5B; --bloom-soft: #4A3E1E;
-  --shadow: 0 4px 16px rgba(0,0,0,0.35); --shadow-lift: 0 10px 28px rgba(0,0,0,0.5);
+  --sand: #12150E; --paper: #1C221A; --paper-alt: #232B20; --ink: #EAF0E6; --ink-soft: #93A08C;
+  --marigold: #6CB568; --marigold-soft: #22301D; --plum: #C6D0C1; --plum-soft: #3C453A;
+  --sage: #8FC989; --sage-soft: #22301D; --line: #2C3527;
+  --root: #5E9C59; --root-soft: #1E2A1B; --branch: #7FC077; --branch-soft: #223020;
+  --bloom: #A6D99C; --bloom-soft: #26331F;
+  --shadow: 0 4px 16px rgba(0,0,0,0.4); --shadow-lift: 0 10px 28px rgba(0,0,0,0.55);
 }
 :root[data-theme="light"] {
-  --sand: #FBEEDD; --paper: #FFFBF5; --paper-alt: #F3E1C8; --ink: #38291F; --ink-soft: #8C7860;
-  --marigold: #D98A34; --marigold-soft: #F3D9AE; --plum: #5B4066; --plum-soft: #E7DCEC;
-  --rose: #BE5B6C; --rose-soft: #F5DCE0; --sage: #6E8F6B; --sage-soft: #DCE8D9; --line: #EBDCC5;
-  --root: #4B6B4E; --root-soft: #DCE6DC; --branch: #B97A4C; --branch-soft: #F0DCC7;
-  --bloom: #B8901F; --bloom-soft: #F2E4BA;
-  --shadow: 0 4px 16px rgba(56,41,31,0.08); --shadow-lift: 0 10px 28px rgba(56,41,31,0.18);
+  --sand: #F5F7F3; --paper: #FFFFFF; --paper-alt: #EBEFE9; --ink: #1B1F1B; --ink-soft: #69716A;
+  --marigold: #4F8C4C; --marigold-soft: #E2EFDF; --plum: #2E3A2C; --plum-soft: #E5E8E3;
+  --sage: #7CB877; --sage-soft: #E2EFDF; --line: #E2E7DF;
+  --root: #33502E; --root-soft: #DCE8D9; --branch: #4F8C4C; --branch-soft: #E2EFDF;
+  --bloom: #93C98A; --bloom-soft: #EBF5E8;
+  --shadow: 0 4px 16px rgba(20,25,20,0.08); --shadow-lift: 0 10px 28px rgba(20,25,20,0.16);
 }
 
 * { box-sizing: border-box; }
@@ -288,7 +285,7 @@ html, body {
   background: none; border: none; color: var(--ink-soft);
   font-size: 17px; cursor: pointer; padding: 4px 8px; line-height: 1; flex-shrink: 0;
 }
-.remove-btn:hover { color: var(--rose); }
+.remove-btn:hover { color: var(--ink); }
 
 /* Inputs */
 .input-row { display: flex; gap: 8px; }
@@ -406,7 +403,7 @@ label.field-label {
   transform: translateX(-50%);
   width: 100%;
   max-width: 480px;
-  bottom: 90px;
+  bottom: var(--nav-clear);
   pointer-events: none;
   z-index: 8;
 }
@@ -433,7 +430,7 @@ label.field-label {
   transform: translateX(-50%);
   width: 100%;
   max-width: 480px;
-  bottom: 90px;
+  bottom: var(--nav-clear);
   pointer-events: none;
   z-index: 8;
 }
@@ -519,12 +516,16 @@ label.field-label {
 }
 .detail-block p { margin: 2px 0; font-size: 14px; font-weight: 600; }
 
-.brand-footer { text-align: center; padding: 18px 10px 6px; }
+.brand-footer { text-align: center; padding: 22px 10px 8px; margin-top: 4px; border-top: 1px solid var(--line); }
 .brand-footer a {
-  color: var(--ink-soft); font-size: 12.5px; font-weight: 700;
-  line-height: 1.6; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px;
+  color: var(--ink-soft); text-decoration: none;
 }
-.brand-footer a:hover { color: var(--root); }
+.brand-footer-logo { width: 26px; height: 26px; border-radius: 50%; box-shadow: var(--shadow); flex-shrink: 0; }
+.brand-footer-text { text-align: left; }
+.brand-footer strong { display: block; font-size: 14px; font-weight: 800; color: var(--ink); }
+.brand-footer small { display: block; font-size: 11.5px; font-weight: 700; color: var(--ink-soft); margin-top: 1px; }
+.brand-footer a:hover strong { color: var(--marigold); }
 
 /* Valores / objetivos / acciones */
 .value-card { border-left: 5px solid var(--root); }
@@ -609,7 +610,7 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
           <div class="subdate" id="headerSubtitle"></div>
         </div>
         <a class="header-logo-link" href="https://calendly.com/jordiriscopsiquiatria/consulta-online" target="_blank" rel="noopener noreferrer" title="Reservar consulta con el Dr. Jordi Risco">
-          <img class="header-logo" src="logo.jpg" alt="Dr. Jordi Risco">
+          <img class="header-logo" src="icon.png" alt="Dr. Jordi Risco">
         </a>
       </div>
     </div>
@@ -1158,7 +1159,11 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
 
     html += `<div class="brand-footer">
       <a href="https://calendly.com/jordiriscopsiquiatria/consulta-online" target="_blank" rel="noopener noreferrer">
-        Diseñado por el Dr. Jordi Risco<br>Psiquiatra · Psicoterapeuta
+        <img class="brand-footer-logo" src="icon.png" alt="">
+        <span class="brand-footer-text">
+          <strong>Diseñado por el Dr. Jordi Risco</strong>
+          <small>Psiquiatra · Psicoterapeuta</small>
+        </span>
       </a>
     </div>`;
 
