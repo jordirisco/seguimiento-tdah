@@ -109,6 +109,27 @@ html, body {
   z-index: 5;
 }
 
+.header-row { display: flex; align-items: flex-start; gap: 10px; }
+
+.header-title-block { flex: 1; min-width: 0; }
+
+.tutorial-btn {
+  width: 30px; height: 30px; flex-shrink: 0;
+  border-radius: 50%; border: none;
+  background: var(--paper-alt); color: var(--ink-soft);
+  font-size: 14px; cursor: pointer; opacity: 0.85;
+  box-shadow: var(--shadow);
+  display: flex; align-items: center; justify-content: center;
+}
+.tutorial-btn:hover { opacity: 1; }
+
+.header-logo-link { flex-shrink: 0; display: block; }
+.header-logo {
+  width: 38px; height: 38px; border-radius: 50%;
+  object-fit: cover; display: block;
+  box-shadow: var(--shadow);
+}
+
 .app-header h1 {
   margin: 0;
   font-family: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
@@ -564,8 +585,16 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
 <div class="tdah-root">
   <div class="app-shell">
     <div class="app-header">
-      <h1 id="headerTitle">Hoy</h1>
-      <div class="subdate" id="headerSubtitle"></div>
+      <div class="header-row">
+        <div id="headerLeftExtra"></div>
+        <div class="header-title-block">
+          <h1 id="headerTitle">Hoy</h1>
+          <div class="subdate" id="headerSubtitle"></div>
+        </div>
+        <a class="header-logo-link" href="https://calendly.com/jordiriscopsiquiatria/consulta-online" target="_blank" rel="noopener noreferrer" title="Reservar consulta con el Dr. Jordi Risco">
+          <img class="header-logo" src="logo.jpg" alt="Dr. Jordi Risco">
+        </a>
+      </div>
     </div>
     <main class="app-main" id="screen"></main>
     <nav class="bottom-nav" id="bottomNav">
@@ -1288,6 +1317,10 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
     $("#headerTitle").textContent = TITLES[state.tab];
     $("#headerSubtitle").textContent = state.tab === "planificar" ? humanDate(tomorrow) : state.tab === "valores" ? "Lo que te importa, paso a paso" : humanDate(today);
     $("#headerSubtitle").classList.toggle("plain", state.tab === "valores");
+    $("#headerLeftExtra").innerHTML = state.tab === "historial" ? `<button class="tutorial-btn" id="tutorialBtn" title="Ver tutorial">💡</button>` : "";
+    if (state.tab === "historial") {
+      $("#tutorialBtn").addEventListener("click", () => { state.onboardingStep = 0; openModal("onboarding"); });
+    }
     $$(".nav-btn").forEach((btn) => btn.classList.toggle("active", btn.dataset.tab === state.tab));
     $("#fabRoot").innerHTML = state.tab === "hoy" ? `
       <div class="fab-container">
