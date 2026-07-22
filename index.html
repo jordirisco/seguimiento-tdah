@@ -437,6 +437,12 @@ label.field-label {
   padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--line);
 }
+.sheet-tall {
+  display: flex;
+  flex-direction: column;
+  height: 78vh;
+}
+.sheet-tall .notes-sheet-list { flex: 1; max-height: none; }
 @media (prefers-reduced-motion: no-preference) {
   .sheet { animation: slideUp 0.2s ease-out; }
   .saved-toast { animation: fadeInOut 1.8s ease; }
@@ -454,6 +460,11 @@ label.field-label {
 
 .sheet p.note { color: var(--ink-soft); font-size: 13.5px; line-height: 1.5; margin: 0 0 12px; }
 .sheet p.note:last-of-type { margin-bottom: 0; }
+
+.onboarding-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 18px; }
+.dot-step { width: 7px; height: 7px; border-radius: 4px; background: var(--line); transition: width 0.15s, background 0.15s; }
+.dot-step.active { background: var(--marigold); width: 20px; }
+.onboarding-icon { font-size: 42px; text-align: center; margin-bottom: 8px; }
 
 /* Historial */
 .history-row {
@@ -718,7 +729,30 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
 
   const TITLES = { hoy: "Hoy", planificar: "Planificar mañana", cierre: "Cierre del día", valores: "Valores y objetivos", historial: "Historial" };
 
-  const state = { tab: "hoy", data: loadData(), modalType: null, cierreQuality: 0, cierreMood: 0 };
+  const state = { tab: "hoy", data: loadData(), modalType: null, cierreQuality: 0, cierreMood: 0, onboardingStep: 0 };
+
+  const ONBOARDING_STEPS = [
+    {
+      icon: "🌱",
+      title: "Valores, objetivos y acciones",
+      body: "Empieza por lo que de verdad te importa. Define objetivos que te acerquen a esos valores, y concreta acciones pequeñas para lograrlo.",
+    },
+    {
+      icon: "📅",
+      title: "Planifica la noche anterior",
+      body: "Cada noche, organiza el día siguiente hora por hora en \"Planificar\". Así por la mañana ya tienes el plan hecho.",
+    },
+    {
+      icon: "🏠",
+      title: "Ve marcando el día",
+      body: "En \"Hoy\" aparece lo que planificaste ayer. Marca cada cosa según la vayas completando.",
+    },
+    {
+      icon: "🌙",
+      title: "Cierra el día",
+      body: "Por la noche, registra cómo has dormido y cómo te has sentido, y date un momento de reflexión antes de planificar mañana.",
+    },
+  ];
 
   function ensureDays() {
     const today = todayStr(), tomorrow = addDays(today, 1);
@@ -1138,7 +1172,7 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
     const notes = [...state.data.notes].sort((a, b) => (b.dateStr + b.time).localeCompare(a.dateStr + a.time));
     $("#modalRoot").innerHTML = `
       <div class="sheet-backdrop" id="sheetBackdrop">
-        <div class="sheet" id="sheetBody">
+        <div class="sheet sheet-tall" id="sheetBody">
           <h2>🗒️ Bloc de notas</h2>
           <div class="notes-sheet-list">
             ${notes.length === 0
@@ -1183,10 +1217,46 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
     $("#modalCancel").addEventListener("click", closeModal);
   }
 
+  /* ---------- Modal: tutorial inicial ---------- */
+  function renderOnboardingSheet() {
+    const i = state.onboardingStep;
+    const step = ONBOARDING_STEPS[i];
+    const isLast = i === ONBOARDING_STEPS.length - 1;
+    $("#modalRoot").innerHTML = `
+      <div class="sheet-backdrop" id="sheetBackdrop">
+        <div class="sheet" id="sheetBody">
+          <div class="onboarding-dots">
+            ${ONBOARDING_STEPS.map((_, idx) => `<span class="dot-step${idx === i ? " active" : ""}"></span>`).join("")}
+          </div>
+          <div class="onboarding-icon">${step.icon}</div>
+          <h2 style="text-align:center;">${step.title}</h2>
+          <p class="note" style="text-align:center;">${step.body}</p>
+          <div class="sheet-actions">
+            <button class="btn btn-secondary" id="onbSkip">Saltar</button>
+            <button class="btn btn-primary" id="onbNext">${isLast ? "Empezar" : "Siguiente"}</button>
+          </div>
+        </div>
+      </div>`;
+    $("#sheetBackdrop").addEventListener("click", (e) => { if (e.target.id === "sheetBackdrop") finishOnboarding(); });
+    $("#onbSkip").addEventListener("click", finishOnboarding);
+    $("#onbNext").addEventListener("click", () => {
+      if (isLast) { finishOnboarding(); return; }
+      state.onboardingStep++;
+      renderOnboardingSheet();
+    });
+  }
+
+  function finishOnboarding() {
+    try { localStorage.setItem(ONBOARDING_SEEN_KEY, "1"); } catch (e) {}
+    closeModal();
+    maybeShowPrivacy();
+  }
+
   function renderModal() {
     if (!state.modalType) { $("#modalRoot").innerHTML = ""; return; }
     if (state.modalType === "notesList") { renderNotesListSheet(); return; }
     if (state.modalType === "privacy") { renderPrivacySheet(); return; }
+    if (state.modalType === "onboarding") { renderOnboardingSheet(); return; }
     renderAddNoteSheet();
   }
 
@@ -1240,9 +1310,20 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
   render();
 
   const PRIVACY_SEEN_KEY = "tdah-privacy-seen";
-  if (!localStorage.getItem(PRIVACY_SEEN_KEY)) {
-    openModal("privacy");
+  const ONBOARDING_SEEN_KEY = "tdah-onboarding-seen";
+
+  function maybeShowPrivacy() {
+    if (localStorage.getItem(PRIVACY_SEEN_KEY)) return;
     try { localStorage.setItem(PRIVACY_SEEN_KEY, "1"); } catch (e) {}
+    setTimeout(() => openModal("privacy"), 150);
+  }
+
+  if (!localStorage.getItem(ONBOARDING_SEEN_KEY)) {
+    try { localStorage.setItem(ONBOARDING_SEEN_KEY, "1"); } catch (e) {}
+    state.onboardingStep = 0;
+    openModal("onboarding");
+  } else {
+    maybeShowPrivacy();
   }
 })();
 </script>
