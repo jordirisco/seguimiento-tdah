@@ -1,0 +1,18 @@
+{
+  "name": "Seguimiento TDAH",
+  "short_name": "Seguimiento TDAH",
+  "description": "Agenda, sueño, valores y notas para el seguimiento diario. Diseñado por el Dr. Jordi Risco.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FBEEDD",
+  "theme_color": "#FBEEDD",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
