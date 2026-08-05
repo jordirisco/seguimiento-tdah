@@ -1,6 +1,6 @@
 {
-  "name": "Seguimiento TDAH",
-  "short_name": "Seguimiento TDAH",
+  "name": "AppTDAH",
+  "short_name": "AppTDAH",
   "description": "Agenda, sueño, valores y notas para el seguimiento diario. Diseñado por el Dr. Jordi Risco.",
   "start_url": "./index.html",
   "scope": "./",
