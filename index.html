@@ -1389,3 +1389,65 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
   }
 })();
 </script>
+
+<script>
+  (function () {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {});
+      });
+    }
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone) return;
+    var deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      showBanner('android');
+    });
+    var ua = window.navigator.userAgent;
+    var isIOS = /iphone|ipad|ipod/i.test(ua);
+    var isSafari = /safari/i.test(ua) && !/crios|fxios|opios/i.test(ua);
+    if (isIOS && isSafari) {
+      var dismissed = localStorage.getItem('installBannerDismissed_v1');
+      if (!dismissed) showBanner('ios');
+    }
+    function showBanner(type) {
+      if (document.getElementById('pwaInstallBanner')) return;
+      var banner = document.createElement('div');
+      banner.id = 'pwaInstallBanner';
+      banner.style.cssText = 'position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:9999;background:#1B1F1B;color:#F5F7F3;border-radius:16px;padding:14px 16px;box-shadow:0 10px 28px rgba(20,25,20,0.25);display:flex;align-items:center;gap:12px;font-family:inherit;font-size:14px;line-height:1.35;';
+      var text = document.createElement('div');
+      text.style.flex = '1';
+      if (type === 'android') {
+        text.textContent = 'Instala la app para acceder mas rapido desde tu pantalla de inicio.';
+      } else {
+        text.innerHTML = 'Para instalar la app: toca <strong>Compartir</strong> y luego <strong>Anadir a pantalla de inicio</strong>.';
+      }
+      banner.appendChild(text);
+      if (type === 'android') {
+        var btn = document.createElement('button');
+        btn.textContent = 'Instalar';
+        btn.style.cssText = 'background:#4F8C4C;color:#fff;border:none;border-radius:10px;padding:8px 14px;font-weight:600;font-size:14px;white-space:nowrap;cursor:pointer;';
+        btn.onclick = function () {
+          banner.remove();
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function () { deferredPrompt = null; });
+          }
+        };
+        banner.appendChild(btn);
+      }
+      var close = document.createElement('button');
+      close.textContent = String.fromCharCode(10005);
+      close.setAttribute('aria-label', 'Cerrar');
+      close.style.cssText = 'background:none;border:none;color:inherit;font-size:16px;opacity:0.7;cursor:pointer;padding:4px;';
+      close.onclick = function () {
+        banner.remove();
+        if (type === 'ios') localStorage.setItem('installBannerDismissed_v1', '1');
+      };
+      banner.appendChild(close);
+      document.body.appendChild(banner);
+    }
+  })();
+</script>
