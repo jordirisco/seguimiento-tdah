@@ -731,10 +731,19 @@ input.action-text:focus { border-bottom-color: var(--bloom); outline: none; }
 
     const today = todayStr();
     const todayDay = emptyDay();
-    const slot10 = todayDay.planning.find((s) => s.hour === "10:00");
-    if (slot10) slot10.text = "Terminar el prototipo";
-    const slot08 = todayDay.planning.find((s) => s.hour === "08:00");
-    if (slot08) { slot08.text = "Salir a caminar 20 min"; slot08.done = true; }
+    const todayPlan = [
+      { hour: "07:00", text: "Desayunar", done: true },
+      { hour: "09:00", text: "Trabajo", done: true },
+      { hour: "11:00", text: "Terminar proyecto", done: true },
+      { hour: "12:00", text: "Revisar email", done: false },
+      { hour: "14:00", text: "Comer", done: false },
+      { hour: "18:00", text: "Jugar a pádel", done: false },
+      { hour: "21:00", text: "Cena", done: false },
+      ];
+    todayPlan.forEach(({ hour, text, done }) => {
+      const slot = todayDay.planning.find((s) => s.hour === hour);
+      if (slot) { slot.text = text; slot.done = done; }
+    });
     days[today] = todayDay;
     days[addDays(today, 1)] = emptyDay();
 
