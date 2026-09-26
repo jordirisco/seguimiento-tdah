@@ -13,7 +13,7 @@ navegador (no hay servidor ni base de datos) — nada se envía ni se
 almacena en ningún sitio fuera de su dispositivo.
 
 **App:** https://jordirisco.github.io/seguimiento-tdah/
-**Consulta:** https://calendly.com/jordiriscopsiquiatria/consulta-online
+**Consulta:** https://calendar.google.com/calendar/appointments/schedules/AcZssZ2a2hfHqB02-AmOQek71JPPVNYq_BdBThH1suJu-SVzqqE6jNAaWU-lDaxcVZNMb3-PsKEbwgLx
 
 ## Licencia
 
